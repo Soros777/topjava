@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealDaoMemory implements MealDao{
 
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
+    public static final AtomicInteger ID = new AtomicInteger(0);
 
     public MealDaoMemory() {
         List<Meal> meals = MealsUtil.meals;
@@ -19,7 +21,7 @@ public class MealDaoMemory implements MealDao{
 
     @Override
     public int addMeal(Meal meal) {
-        int id = MealsUtil.ID.incrementAndGet();
+        int id = ID.incrementAndGet();
         meal.setId(id);
         storage.put(id, meal);
         return id;
