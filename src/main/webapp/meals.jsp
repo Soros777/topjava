@@ -21,6 +21,35 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
+
+    <div class="outer">
+        <form id="filter" method="get" action="meals">
+            <input type="hidden" name="action" value="filter">
+            <div class="row">
+                <div class="col-2">
+                    <label for="startDate">От даты (включая)</label>
+                    <input type="date" name="startDate" id="startDate" autocomplete="off">
+                </div>
+                <div class="col-2">
+                    <label for="endDate">До даты (включая)</label>
+                    <input type="date" name="endDate" id="endDate" autocomplete="off">
+                </div>
+                <div class="offset-2 col-3">
+                    <label for="startTime">От времени (включая)</label>
+                    <input type="time" name="startTime" id="startTime" autocomplete="off">
+                </div>
+                <div class="col-3">
+                    <label for="endTime">До времени (исключая)</label>
+                    <input type="time" name="endTime" id="endTime" autocomplete="off">
+                </div>
+            </div>
+            <div class="row text-right">
+                <button id="cancel" class="btn btn-danger">Отменить</button>
+                <button type="submit" class="btn btn-primary">Отфильтровать</button>
+            </div>
+        </form>
+    </div>
+
     <a href="meals?action=create">Add Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
@@ -34,7 +63,7 @@
         </tr>
         </thead>
         <c:forEach items="${meals}" var="meal">
-            <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
             <tr class="${meal.excess ? 'excess' : 'normal'}">
                 <td>
                         <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
@@ -50,5 +79,14 @@
         </c:forEach>
     </table>
 </section>
+<script>
+    document.getElementById("cancel").onclick = function (e) {
+        e.preventDefault();
+        document.getElementById("startTime").value = "";
+        document.getElementById("endTime").value = "";
+        document.getElementById("startDate").value = "";
+        document.getElementById("endDate").value = "";
+    }
+</script>
 </body>
 </html>
