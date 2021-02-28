@@ -1,14 +1,27 @@
 package ru.javawebinar.topjava.util;
 
 
+import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.AbstractBaseEntity;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class ValidationUtil {
+    private static final Logger log = getLogger(ValidationUtil.class);
     private ValidationUtil() {
     }
 
+    public static void checkMealOwner(Meal meal, int userId) {
+        log.info("Start checkMealOwner");
+        if(meal == null || meal.getUser() == null || meal.getUser().getId() != userId) {
+            throw new NotFoundException(String.format("Meal %s does not own to user with id %d", meal, userId));
+        }
+    }
+
     public static <T> T checkNotFoundWithId(T object, int id) {
+        log.info("Start checkNotFoundWithId");
         checkNotFoundWithId(object != null, id);
         return object;
     }
