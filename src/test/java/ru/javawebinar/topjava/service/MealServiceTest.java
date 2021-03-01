@@ -1,7 +1,12 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExternalResource;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -9,16 +14,19 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import ru.javawebinar.topjava.utils.Timer;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertThrows;
-import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static org.slf4j.LoggerFactory.getLogger;
+import static ru.javawebinar.topjava.utils.MealTestData.*;
+import static ru.javawebinar.topjava.utils.UserTestData.ADMIN_ID;
+import static ru.javawebinar.topjava.utils.UserTestData.USER_ID;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -27,6 +35,32 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+    private static final Logger log = getLogger(MealServiceTest.class);
+
+    private static Map<String, Long> testTimeResults = new HashMap<>();
+    private Timer timer = new Timer(testTimeResults);
+
+    @Rule
+    public final TestName testName = new TestName();
+    @Rule
+    public final ExternalResource resource = new ExternalResource() {
+        @Override
+        protected void before() throws Throwable {
+            timer.start();
+        }
+
+        @Override
+        protected void after() {
+            timer.finish(testName.getMethodName());
+        }
+    };
+
+    @AfterClass
+    public static void logout() {
+        log.info("   ========= summary : ===========\n");
+        testTimeResults.forEach((testName, duration) -> log.info("      {} : {} ms", testName, duration));
+        log.info("   ======= end test summary ========\n");
+    }
 
     @Autowired
     private MealService service;

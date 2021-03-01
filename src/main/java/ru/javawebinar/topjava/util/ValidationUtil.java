@@ -14,14 +14,12 @@ public class ValidationUtil {
     }
 
     public static void checkMealOwner(Meal meal, int userId) {
-        log.info("Start checkMealOwner");
         if(meal == null || meal.getUser() == null || meal.getUser().getId() != userId) {
             throw new NotFoundException(String.format("Meal %s does not own to user with id %d", meal, userId));
         }
     }
 
     public static <T> T checkNotFoundWithId(T object, int id) {
-        log.info("Start checkNotFoundWithId");
         checkNotFoundWithId(object != null, id);
         return object;
     }
