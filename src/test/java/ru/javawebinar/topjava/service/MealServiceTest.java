@@ -3,8 +3,8 @@ package ru.javawebinar.topjava.service;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExternalResource;
-import org.junit.rules.TestName;
+import org.junit.rules.Stopwatch;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,12 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
-import ru.javawebinar.topjava.utils.Timer;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertThrows;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -37,33 +37,29 @@ import static ru.javawebinar.topjava.utils.UserTestData.USER_ID;
 public class MealServiceTest {
     private static final Logger log = getLogger(MealServiceTest.class);
 
+    @Autowired
+    private MealService service;
+
     private static Map<String, Long> testTimeResults = new HashMap<>();
-    private Timer timer = new Timer(testTimeResults);
 
     @Rule
-    public final TestName testName = new TestName();
-    @Rule
-    public final ExternalResource resource = new ExternalResource() {
-        @Override
-        protected void before() throws Throwable {
-            timer.start();
-        }
+    public Stopwatch stopWatch = new Stopwatch() {
 
         @Override
-        protected void after() {
-            timer.finish(testName.getMethodName());
+        protected void finished(long nanos, Description description) {
+            String testMethod = description.getMethodName();
+            long duration = TimeUnit.NANOSECONDS.toMillis(nanos);
+            log.info("Test {} spent {} ms", testMethod, duration);
+            testTimeResults.put(testMethod, duration);
         }
     };
 
     @AfterClass
     public static void logout() {
-        log.info("   ========= summary : ===========\n");
-        testTimeResults.forEach((testName, duration) -> log.info("      {} : {} ms", testName, duration));
-        log.info("   ======= end test summary ========\n");
+        StringBuilder stringBuilder = new StringBuilder("\n==== Tests durations ====\n");
+        testTimeResults.forEach((testName, duration) -> stringBuilder.append(String.format("%-25s %d ms%n", testName, duration)));
+        log.info(stringBuilder.append("=== the end ===\n").toString());
     }
-
-    @Autowired
-    private MealService service;
 
     @Test
     public void delete() {

@@ -32,15 +32,13 @@ public class JpaMealRepository implements MealRepository {
             em.persist(meal);
             return meal;
         } else {
-            // we can't use em.merge(meal) here, because meal.user can be null: ОШИБКА: нулевое значение в столбце "user_id" нарушает ограничение NOT NULL
-            // am I right?
-            return em.createNamedQuery(Meal.UPDATE)
-                    .setParameter("mealId", meal.id())
-                    .setParameter("dateTime", meal.getDateTime())
-                    .setParameter("description", meal.getDescription())
-                    .setParameter("calories", meal.getCalories())
-                    .setParameter("userId", userId)
-                    .executeUpdate() == 0 ? null : meal;
+            Meal meal1 = em.find(Meal.class, meal.getId());
+            if(meal1.getUser().getId() != userId) {
+                return null;
+            }
+            User user = em.getReference(User.class, userId);
+            meal.setUser(user);
+            return em.merge(meal);
         }
     }
 
@@ -57,16 +55,12 @@ public class JpaMealRepository implements MealRepository {
                 return false;
             }
         } catch (EntityNotFoundException nfe) {
-            throw new NotFoundException(nfe.getMessage());
+            log.info("Not found Meal entity");
+            return false;
         }
         em.remove(mealReference);
         return true;
-        */
-
-        /* alternative method
-        Query query = em.createQuery("DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:userId");
-        return query.setParameter("id", id).setParameter("userId", userId).executeUpdate() != 0;
-        */
+*/
 
         return em.createNamedQuery(Meal.DELETE)
                 .setParameter("id", id)
