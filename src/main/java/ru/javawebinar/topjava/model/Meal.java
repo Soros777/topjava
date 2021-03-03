@@ -26,7 +26,6 @@ public class Meal extends AbstractBaseEntity {
 
     @Column(name = "date_time", nullable = false, columnDefinition = "timestamp default now()")
     @NotNull
-//    @NotBlank
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)

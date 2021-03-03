@@ -36,15 +36,12 @@ import static ru.javawebinar.topjava.utils.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
     private static final Logger log = getLogger(MealServiceTest.class);
-
+    private static Map<String, Long> testTimeResults = new HashMap<>();
     @Autowired
     private MealService service;
 
-    private static Map<String, Long> testTimeResults = new HashMap<>();
-
     @Rule
     public Stopwatch stopWatch = new Stopwatch() {
-
         @Override
         protected void finished(long nanos, Description description) {
             String testMethod = description.getMethodName();
@@ -92,7 +89,6 @@ public class MealServiceTest {
         assertThrows(DataAccessException.class, () ->
                 service.create(new Meal(null, meal1.getDateTime(), "duplicate", 100), USER_ID));
     }
-
 
     @Test
     public void get() {
