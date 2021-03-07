@@ -26,8 +26,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertThrows;
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.UserTestData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -72,7 +71,7 @@ public abstract class MealServiceTest {
 
     @Test
     public void deleteNotFound() {
-        assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND, USER_ID));
+        assertThrows(NotFoundException.class, () -> service.delete(MEAL_NOT_FOUND_ID, USER_ID));
     }
 
     @Test
@@ -82,9 +81,9 @@ public abstract class MealServiceTest {
 
     @Test
     public void create() {
-        Meal created = service.create(getNew(), USER_ID);
+        Meal created = service.create(getNewMeal(), USER_ID);
         int newId = created.id();
-        Meal newMeal = getNew();
+        Meal newMeal = getNewMeal();
         newMeal.setId(newId);
         MEAL_MATCHER.assertMatch(created, newMeal);
         MEAL_MATCHER.assertMatch(service.get(newId, USER_ID), newMeal);
@@ -105,7 +104,7 @@ public abstract class MealServiceTest {
 
     @Test
     public void getNotFound() {
-        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, USER_ID));
+        assertThrows(NotFoundException.class, () -> service.get(MEAL_NOT_FOUND_ID, USER_ID));
     }
 
     @Test
@@ -115,9 +114,9 @@ public abstract class MealServiceTest {
 
     @Test
     public void update() {
-        Meal updated = getUpdated();
+        Meal updated = getUpdatedMeal();
         service.update(updated, USER_ID);
-        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated());
+        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdatedMeal());
     }
 
     @Test
@@ -143,5 +142,11 @@ public abstract class MealServiceTest {
     @Test
     public void getBetweenWithNullDates() {
         MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
+    }
+
+    @Test
+    public void getWithUser() {
+        Meal meal = service.getWithUser(ADMIN_MEAL_ID, ADMIN_ID);
+        USER_MATCHER.assertMatch(meal.getUser(), admin);
     }
 }

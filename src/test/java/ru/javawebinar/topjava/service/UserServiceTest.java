@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Stopwatch;
@@ -9,7 +8,7 @@ import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
+import org.springframework.boot.test.autoconfigure.core.AutoConfigureCache;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,6 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertThrows;
 import static org.slf4j.LoggerFactory.getLogger;
+import static ru.javawebinar.topjava.MealTestData.MEAL_MATCHER;
+import static ru.javawebinar.topjava.MealTestData.meals;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 @ContextConfiguration({
@@ -36,14 +37,12 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(Profiles.POSTGRES_DB)
+@AutoConfigureCache
 public abstract class UserServiceTest {
     private static final Logger log = getLogger("result");
 
     @Autowired
     protected UserService service;
-
-    @Autowired
-    protected CacheManager cacheManager;
 
     private static final StringBuilder results = new StringBuilder();
     @Rule
@@ -57,11 +56,6 @@ public abstract class UserServiceTest {
         }
     };
 
-    @Before
-    public void setup() {
-        cacheManager.getCache("users").clear();
-    }
-
     @AfterClass
     public static void printResult() {
         log.info("\n---------------------------------" +
@@ -73,9 +67,9 @@ public abstract class UserServiceTest {
 
     @Test
     public void create() {
-        User created = service.create(getNew());
+        User created = service.create(getNewUser());
         int newId = created.id();
-        User newUser = getNew();
+        User newUser = getNewUser();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(service.get(newId), newUser);
@@ -95,7 +89,7 @@ public abstract class UserServiceTest {
 
     @Test
     public void deletedNotFound() {
-        assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> service.delete(USER_NOT_FOUND_ID));
     }
 
     @Test
@@ -106,7 +100,7 @@ public abstract class UserServiceTest {
 
     @Test
     public void getNotFound() {
-        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> service.get(USER_NOT_FOUND_ID));
     }
 
     @Test
@@ -117,14 +111,20 @@ public abstract class UserServiceTest {
 
     @Test
     public void update() {
-        User updated = getUpdated();
+        User updated = getUpdatedUser();
         service.update(updated);
-        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdatedUser());
     }
 
     @Test
     public void getAll() {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, user);
+    }
+
+    @Test
+    public void getWithMeals() {
+        User user = service.getWithMeal(USER_ID);
+        MEAL_MATCHER.assertMatch(user.getMeals(), meals);
     }
 }
