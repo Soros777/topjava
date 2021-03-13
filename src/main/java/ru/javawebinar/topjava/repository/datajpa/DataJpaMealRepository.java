@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
+import org.slf4j.Logger;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,9 +11,11 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Repository
 public class DataJpaMealRepository implements MealRepository {
-    private static final Sort SORT_DATE = Sort.by(Sort.Direction.DESC, "dateTime");
+    private static final Logger log = getLogger(DataJpaMealRepository.class);
 
     private final CrudMealRepository crudMealRepository;
     private final DataJpaUserRepository dataJpaUserRepository;
@@ -36,23 +39,24 @@ public class DataJpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public boolean delete(int id, int userId) {
-        if(get(id, userId) == null) {
-            return false;
-        }
-        crudMealRepository.deleteById(id);
-        return true;
+        return crudMealRepository.delete(id, userId) != 0;
     }
 
     @Override
     @Transactional
     public Meal get(int id, int userId) {
-        Meal entity = crudMealRepository.findById(id).orElse(null);
-        return entity == null || entity.getUser().id() != userId ? null : entity;
+        log.info("start get");
+        return crudMealRepository.findById(id)
+                .filter(meal -> meal.getUser().getId() == userId) // getId() - without extra query to DB, but id() - with extra query.
+                .orElse(null);
+//        Meal entity = crudMealRepository.findById(id).orElse(null);
+//        log.info("before return");
+//        return entity == null || entity.getUser().getId() != userId ? null : entity;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return crudMealRepository.findByUserIdOrderByDateTimeDesc(userId, SORT_DATE);
+        return crudMealRepository.getAll(userId);
     }
 
     @Override
