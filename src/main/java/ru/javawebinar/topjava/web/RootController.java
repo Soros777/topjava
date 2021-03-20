@@ -14,7 +14,7 @@ public class RootController {
     @Autowired
     private UserService service;
 
-    @GetMapping("/")
+    @GetMapping("/main")
     public String root() {
         return "index";
     }
