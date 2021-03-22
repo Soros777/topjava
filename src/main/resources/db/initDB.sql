@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS users_roles;
-DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS meals;
 DROP TABLE IF EXISTS users;
 DROP SEQUENCE IF EXISTS global_seq;
@@ -18,21 +17,13 @@ CREATE TABLE users
 );
 CREATE UNIQUE INDEX users_unique_email_idx ON users (email);
 
-CREATE TABLE roles
+CREATE TABLE user_roles
 (
-    id INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-    role    VARCHAR NOT NULL
+    user_id INTEGER NOT NULL,
+    role    VARCHAR,
+    CONSTRAINT user_roles_idx UNIQUE (user_id, role),
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX role_unique_idx ON roles (role);
-
-CREATE TABLE users_roles
-(
-    user_id     INTEGER NOT NULL,
-    role_id     INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-    FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
-);
-CREATE UNIQUE INDEX user_role_idx ON users_roles (user_id, role_id);
 
 CREATE TABLE meals
 (
