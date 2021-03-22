@@ -4,7 +4,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.web.meal.RestController;
+import ru.javawebinar.topjava.web.meal.RestMealController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,12 +22,12 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 public class MealServlet extends HttpServlet {
 
-    private RestController mealController;
+    private RestMealController mealController;
 
     @Override
     public void init() {
         WebApplicationContext springContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-        mealController = springContext.getBean(RestController.class);
+        mealController = springContext.getBean(RestMealController.class);
     }
 
     @Override

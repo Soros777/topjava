@@ -22,9 +22,9 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
 @RequestMapping("/meals")
-public class JspController extends AbstractMealController {
+public class JspMealController extends AbstractMealController {
 
-    public JspController(MealService service) {
+    public JspMealController(MealService service) {
         super(service);
     }
 
@@ -66,14 +66,14 @@ public class JspController extends AbstractMealController {
     public String createAndUpdate(HttpServletRequest request, Model model) throws UnsupportedEncodingException {
         request.setCharacterEncoding("UTF-8");
         if(StringUtils.hasLength(request.getParameter("id"))) {
-            super.update(fromRequest(request), getId(request));
+            super.update(getMeal(request), getId(request));
         } else {
-            super.create(fromRequest(request));
+            super.create(getMeal(request));
         }
         return getAll(model);
     }
 
-    private Meal fromRequest(HttpServletRequest request) {
+    private Meal getMeal(HttpServletRequest request) {
         return new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
