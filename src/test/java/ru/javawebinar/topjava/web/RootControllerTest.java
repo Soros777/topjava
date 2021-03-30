@@ -41,13 +41,15 @@ class RootControllerTest extends AbstractControllerTest {
                 .andExpect(view().name("meals"))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
                 .andExpect(model().attribute("meals",
-                        new AssertionMatcher<List<MealTo>>() {
-                            @Override
-                            public void assertion(List<MealTo> actual) throws AssertionError {
-                                List<MealTo> expected = MealsUtil.getTos(List.of(meal7, meal6, meal5, meal4, meal3, meal2, meal1), SecurityUtil.authUserCaloriesPerDay());
-                                MEAL_TO_MATCHER.assertMatch(actual, expected);
-                            }
-                        }
+//                        new AssertionMatcher<List<MealTo>>() {
+//                            @Override
+//                            public void assertion(List<MealTo> actual) throws AssertionError {
+//                                List<MealTo> expected = MealsUtil.getTos(List.of(meal7, meal6, meal5, meal4, meal3, meal2, meal1), SecurityUtil.authUserCaloriesPerDay());
+//                                MEAL_TO_MATCHER.assertMatch(actual, expected);
+//
+//                            }
+//                        }
+                        MealsUtil.getTos(List.of(meal7, meal6, meal5, meal4, meal3, meal2, meal1), SecurityUtil.authUserCaloriesPerDay())
                 ));
     }
 }
