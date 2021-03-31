@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,10 +7,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.LocalDateFormatter;
+import ru.javawebinar.topjava.util.LocalTimeFormatter;
 
 import java.net.URI;
-import java.time.LocalDateTime;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping(value = MealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,9 +58,17 @@ public class MealRestController extends AbstractMealController {
     }
 
     @GetMapping("/filter")
-    public List<MealTo> getBetween(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
-        return super.getBetween(startDateTime.toLocalDate(), startDateTime.toLocalTime(), endDateTime.toLocalDate(), endDateTime.toLocalTime());
+    public List<MealTo> getBetweenDateAndTime(@RequestParam String startDate, @RequestParam String startTime, @RequestParam String endDate, @RequestParam String endTime) {
+        LocalDateFormatter dateFormatter = new LocalDateFormatter();
+        LocalTimeFormatter timeFormatter = new LocalTimeFormatter();
+        Locale locale = Locale.US;
+        try {
+            return super.getBetween(dateFormatter.parse(startDate, locale),
+                    timeFormatter.parse(startTime, locale),
+                    dateFormatter.parse(endDate, locale),
+                    timeFormatter.parse(endTime, locale));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
