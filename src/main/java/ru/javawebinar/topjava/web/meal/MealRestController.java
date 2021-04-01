@@ -12,6 +12,8 @@ import ru.javawebinar.topjava.util.LocalTimeFormatter;
 
 import java.net.URI;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,7 +58,7 @@ public class MealRestController extends AbstractMealController {
     }
 
     @GetMapping("/filter")
-    public List<MealTo> getBetweenDateAndTime(@RequestParam String startDate, @RequestParam String startTime, @RequestParam String endDate, @RequestParam String endTime) {
+    public List<MealTo> getBetweenDateAndTime(@RequestParam LocalDate startDate, @RequestParam LocalTime startTime, @RequestParam LocalDate endDate, @RequestParam LocalTime endTime) {
         return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }
