@@ -48,27 +48,15 @@ public class MealRestController extends AbstractMealController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Meal> updateWithLocation(@RequestBody Meal meal, @PathVariable int id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@RequestBody Meal meal, @PathVariable int id) {
         super.update(meal, id);
-        URI resourceUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{id}")
-                .buildAndExpand(meal.getId()).toUri();
-        return ResponseEntity.created(resourceUri).body(meal);
     }
 
     @GetMapping("/filter")
     public List<MealTo> getBetweenDateAndTime(@RequestParam String startDate, @RequestParam String startTime, @RequestParam String endDate, @RequestParam String endTime) {
-        LocalDateFormatter dateFormatter = new LocalDateFormatter();
-        LocalTimeFormatter timeFormatter = new LocalTimeFormatter();
-        Locale locale = Locale.US;
-        try {
-            return super.getBetween(dateFormatter.parse(startDate, locale),
-                    timeFormatter.parse(startTime, locale),
-                    dateFormatter.parse(endDate, locale),
-                    timeFormatter.parse(endTime, locale));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }

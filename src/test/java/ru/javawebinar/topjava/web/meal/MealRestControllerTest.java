@@ -71,14 +71,12 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void updateWithLocation() throws Exception {
+    void update() throws Exception {
         Meal updated = MealTestData.getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(updated));
+                .andExpect(status().isNoContent());
     }
 
     @Test
