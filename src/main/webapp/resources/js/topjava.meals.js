@@ -57,3 +57,25 @@ function update(id, dateTime, description, calories, edit) {
     $('input#calories').val(calories);
     $("#editRow").modal();
 }
+
+function filter() {
+    let urlSuffix = "filter?startDate=" + $('input#startDate').val() +
+        "&endDate=" + $('input#endDate').val() + "&startTime=" +
+        $('input#startTime').val() + "&endTime=" + $('input#endTime').val();
+    $.get(ctx.ajaxUrl + urlSuffix, function (data) {
+        ctx.datatableApi.clear().rows.add(data).draw();
+    })
+}
+
+function saveMeal() {
+    const form = $("#detailsForm");
+    $.ajax({
+        type: "POST",
+        url: ctx.ajaxUrl,
+        data: form.serialize()
+    }).done(function () {
+        $("#editRow").modal("hide");
+        filter();
+        successNoty("Saved");
+    });
+}
