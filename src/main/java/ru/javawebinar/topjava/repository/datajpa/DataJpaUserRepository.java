@@ -46,4 +46,9 @@ public class DataJpaUserRepository implements UserRepository {
     public User getWithMeals(int id) {
         return crudRepository.getWithMeals(id);
     }
+
+    @Override
+    public int setEnabled(int userId, boolean enabled) {
+        return crudRepository.setEnabled(userId, enabled);
+    }
 }

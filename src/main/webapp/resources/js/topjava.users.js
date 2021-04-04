@@ -45,3 +45,21 @@ $(function () {
         })
     );
 });
+
+function changeEnabled(userId, enabled) {
+    ctx.ajaxUrl = ctx.ajaxUrl + "change";
+    let enb = true;
+    if(enabled) {
+        enb = false;
+    }
+    let data = "userId=" + userId + "&enabled=" + enb;
+
+    $.ajax({
+        type: "PUT",
+        url: ctx.ajaxUrl,
+        data: data,
+    }).done(function () {
+        updateTable();
+        successNoty("Enabled changed");
+    });
+}
