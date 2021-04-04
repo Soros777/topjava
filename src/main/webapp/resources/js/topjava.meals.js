@@ -79,3 +79,11 @@ function saveMeal() {
         successNoty("Saved");
     });
 }
+
+function clean() {
+    $('input#startDate').val('');
+    $('input#startTime').val('');
+    $('input#endDate').val('');
+    $('input#endTime').val('');
+    filter();
+}
