@@ -40,6 +40,9 @@ function updateTable() {
 }
 
 function save() {
+    if($('input#id').val() !== '') {
+        ctx.ajaxUrl = ctx.ajaxUrl + "update";
+    }
     const form = $("#detailsForm");
     $.ajax({
         type: "POST",
