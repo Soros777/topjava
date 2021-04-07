@@ -35,14 +35,15 @@ function deleteRow(id) {
 
 function updateTable() {
     $.get(ctx.ajaxUrl, function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
+        fillTable(data);
     });
 }
 
+function fillTable(data) {
+    ctx.datatableApi.clear().rows.add(data).draw();
+}
+
 function save() {
-    if($('input#id').val() !== '') {
-        ctx.ajaxUrl = ctx.ajaxUrl + 'update';
-    }
     const form = $("#detailsForm");
     $.ajax({
         type: "POST",
@@ -50,7 +51,11 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        if(ctx.ajax.indexOf("meal") !== -1) {
+            filterMeal();
+        } else {
+            updateTable();
+        }
         successNoty("Saved");
     });
 }

@@ -13,7 +13,7 @@ $(function () {
             "info": true,
             "columns": [
                 {
-                    "data": "dateTime"
+                    "data": "dateTime",
                 },
                 {
                     "data": "description"
@@ -33,7 +33,7 @@ $(function () {
             "order": [
                 [
                     0,
-                    "asc"
+                    "desc"
                 ]
             ]
         })
@@ -41,49 +41,18 @@ $(function () {
 });
 
 function create() {
-    $.get(ctx.ajaxUrl + "created", function (data) {
-        $('input#dateTime').val(data['dateTime']);
-        $('input#description').val(data['description']);
-        $('input#calories').val(data['calories']);
-    });
+    let date = new Date();
+    $('input#dateTime').val(date.toJSON().slice(0,16));
     $("#editRow").modal();
 }
 
-function update(id, dateTime, description, calories, edit) {
-    $('h4#title').html(edit);
-    $('input#id').val(id);
-    $('input#dateTime').val(dateTime);
-    $('input#description').val(description);
-    $('input#calories').val(calories);
-    $("#editRow").modal();
-}
-
-function filter() {
-    let urlSuffix = "filter?startDate=" + $('input#startDate').val() +
-        "&endDate=" + $('input#endDate').val() + "&startTime=" +
-        $('input#startTime').val() + "&endTime=" + $('input#endTime').val();
-    $.get(ctx.ajaxUrl + urlSuffix, function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
-    })
-}
-
-function saveMeal() {
-    const form = $("#detailsForm");
+function filterMeal() {
+    const form = $("#mealsFilter");
     $.ajax({
-        type: "POST",
-        url: ctx.ajaxUrl,
+        type: "GET",
+        url: ctx.ajaxUrl + "filter",
         data: form.serialize()
-    }).done(function () {
-        $("#editRow").modal("hide");
-        filter();
-        successNoty("Saved");
+    }).done(function (data) {
+        fillTable(data);
     });
-}
-
-function clean() {
-    $('input#startDate').val('');
-    $('input#startTime').val('');
-    $('input#endDate').val('');
-    $('input#endTime').val('');
-    filter();
 }

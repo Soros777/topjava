@@ -30,11 +30,11 @@
                 <label for="endTime" class="col-form-label"><spring:message code="meal.endTime"/>:</label>
                 <input type="time" name="endTime" id="endTime">
             </div>
-            <button type="button" class="btn btn-primary" onclick="filter()">
+            <button type="button" class="btn btn-primary" onclick="filterMeal()">
                 <span class="fa fa-filter"></span>
                 <spring:message code="meal.filter"/>
             </button>
-            <button type="button" class="btn btn-secondary" onclick="clean()">
+            <button type="reset" class="btn btn-secondary">
                 <span class="fa fa-close"></span>
                 <spring:message code="common.clean"/>
             </button>
@@ -96,7 +96,7 @@
                     </div>
                     <div class="form-group">
                         <label for="calories" class="col-form-label"><spring:message code="meal.calories"/>:</label>
-                        <input type="number" name="calories" id="calories" required>
+                        <input type="number" name="calories" id="calories" value="1000" required>
                     </div>
                 </form>
             </div>
@@ -105,7 +105,7 @@
                     <span class="fa fa-close"></span>
                     <spring:message code="common.cancel"/>
                 </button>
-                <button type="button" class="btn btn-primary" onclick="saveMeal()">
+                <button type="button" class="btn btn-primary" onclick="save()">
                     <span class="fa fa-check"></span>
                     <spring:message code="common.save"/>
                 </button>
