@@ -46,20 +46,19 @@ $(function () {
     );
 });
 
-function changeEnabled(userId, enabled) {
+function changeEnabled(event, userId) {
+    event.preventDefault();
+    const cb = document.getElementById("enabledCB");
     ctx.ajaxUrl = ctx.ajaxUrl + "change";
-    let enb = true;
-    if(enabled) {
-        enb = false;
-    }
+    let enb = !cb.checked;
     let data = "userId=" + userId + "&enabled=" + enb;
-
     $.ajax({
-        type: "PUT",
+        type: "POST",
         url: ctx.ajaxUrl,
         data: data,
     }).done(function () {
-        updateTable();
+        cb.checked(!cb.checked);
+        // change css
         successNoty("Enabled changed");
     });
 }
