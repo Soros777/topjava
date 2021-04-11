@@ -7,6 +7,7 @@
 <body>
 <script type="text/javascript" src="resources/js/topjava.common.js" defer></script>
 <script type="text/javascript" src="resources/js/topjava.meals.js" defer></script>
+<link rel="stylesheet" type="text/css" href="webjars\datetimepicker\2.5.20-1\jquery.datetimepicker.css"/>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
 <div class="jumbotron pt-4">
@@ -18,8 +19,8 @@
                 <form id="filter">
                     <div class="row">
                         <div class="col-3">
-                            <label for="startDate"><spring:message code="meal.startDate"/></label>
-                            <input class="form-control" type="date" name="startDate" id="startDate">
+                            <label for="datetimepicker"><spring:message code="meal.startDate"/></label>
+                            <input id="datetimepicker" type="text" class="form-control" name="startDate" >
                         </div>
                         <div class="col-3">
                             <label for="endDate"><spring:message code="meal.endDate"/></label>
@@ -120,4 +121,7 @@
     i18n["${key}"] = "<spring:message code="${key}"/>";
     </c:forEach>
 </script>
+<script src="webjars\datetimepicker\2.5.20-1\jquery.js"></script>
+<script src="webjars\datetimepicker\2.5.20-1\build\jquery.datetimepicker.full.min.js"></script>
+
 </html>
