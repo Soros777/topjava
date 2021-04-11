@@ -47,4 +47,11 @@ public class MealsUtil {
                 mealTo.getDescription(),
                 mealTo.getCalories());
     }
+
+    public static Meal updateFromTo(Meal meal, MealTo mealTo) {
+        meal.setDateTime(mealTo.getDateTime());
+        meal.setDescription(mealTo.getDescription());
+        meal.setCalories(mealTo.getCalories());
+        return meal;
+    }
 }
