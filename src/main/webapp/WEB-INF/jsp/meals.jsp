@@ -19,20 +19,20 @@
                 <form id="filter">
                     <div class="row">
                         <div class="col-3">
-                            <label for="datetimepicker"><spring:message code="meal.startDate"/></label>
-                            <input id="datetimepicker" type="text" class="form-control" name="startDate" >
+                            <label for="startDatePicker"><spring:message code="meal.startDate"/></label>
+                            <input id="startDatePicker" type="text" class="form-control" name="startDate" >
                         </div>
                         <div class="col-3">
-                            <label for="endDate"><spring:message code="meal.endDate"/></label>
-                            <input class="form-control" type="date" name="endDate" id="endDate">
+                            <label for="endDatePicker"><spring:message code="meal.endDate"/></label>
+                            <input class="form-control" type="text" name="endDate" id="endDatePicker">
                         </div>
                         <div class="offset-2 col-2">
-                            <label for="startTime"><spring:message code="meal.startTime"/></label>
-                            <input class="form-control" type="time" name="startTime" id="startTime">
+                            <label for="startTimePicker"><spring:message code="meal.startTime"/></label>
+                            <input class="form-control" type="v" name="startTime" id="startTimePicker">
                         </div>
                         <div class="col-2">
-                            <label for="endTime"><spring:message code="meal.endTime"/></label>
-                            <input class="form-control" type="time" name="endTime" id="endTime">
+                            <label for="endTimePicker"><spring:message code="meal.endTime"/></label>
+                            <input class="form-control" type="text" name="endTime" id="endTimePicker">
                         </div>
                     </div>
                 </form>
@@ -112,6 +112,8 @@
 </div>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
+<script src="webjars\datetimepicker\2.5.20-1\jquery.js"></script>
+<script src="webjars\datetimepicker\2.5.20-1\build\jquery.datetimepicker.full.min.js"></script>
 <script type="text/javascript">
     const i18n = [];
     i18n["addTitle"] = '<spring:message code="meal.add"/>';
@@ -120,8 +122,22 @@
     <c:forEach var="key" items='<%=new String[]{"common.deleted","common.saved","common.errorStatus","common.confirm"}%>'>
     i18n["${key}"] = "<spring:message code="${key}"/>";
     </c:forEach>
-</script>
-<script src="webjars\datetimepicker\2.5.20-1\jquery.js"></script>
-<script src="webjars\datetimepicker\2.5.20-1\build\jquery.datetimepicker.full.min.js"></script>
 
+    jQuery('#startDatePicker').datetimepicker({
+        timepicker:false,
+        format:'Y-m-d'
+    });
+    jQuery('#endDatePicker').datetimepicker({
+        timepicker:false,
+        format:'Y-m-d'
+    });
+    jQuery('#startTimePicker').datetimepicker({
+        datepicker:false,
+        format:'H:i'
+    });
+    jQuery('#endTimePicker').datetimepicker({
+        datepicker:false,
+        format:'H:i'
+    });
+</script>
 </html>

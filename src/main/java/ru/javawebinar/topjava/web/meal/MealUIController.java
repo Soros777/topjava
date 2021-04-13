@@ -22,8 +22,7 @@ public class MealUIController extends AbstractMealController {
     @Override
     @GetMapping
     public List<MealTo> getAll() {
-        List<MealTo> result = super.getAll();
-        return result;
+        return super.getAll();
     }
 
     @Override
@@ -41,17 +40,17 @@ public class MealUIController extends AbstractMealController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> createOrUpdate(@Valid MealTo mealTo, BindingResult result) {
+    public ResponseEntity<String> createOrUpdate(@Valid Meal meal, BindingResult result) {
         if(result.hasErrors()) {
             String errorFieldMsg = result.getFieldErrors().stream()
                     .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                     .collect(Collectors.joining("<br>"));
             return ResponseEntity.unprocessableEntity().body(errorFieldMsg);
         }
-        if(mealTo.isNew()) {
-            super.create(mealTo);
+        if(meal.isNew()) {
+            super.create(meal);
         } else {
-            super.update(mealTo, mealTo.id());
+            super.update(meal, meal.id());
         }
         return ResponseEntity.ok().build();
     }
