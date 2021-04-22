@@ -40,6 +40,42 @@
         </property>
     </bean>
 
+
+    <!--    https://stackoverflow.com/questions/37304055/contentnegotiatingviewresolver-mediatypes-error-after-upgrading-to-spring-4-2
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+        <property name="viewResolvers">
+            <list>
+                <bean id="localBasedViewResolver" class="com.company.web.i18n.LocaleBasedViewResolver"
+                      p:viewClass="org.springframework.web.servlet.view.JstlView"
+                      p:prefix="${views.prefix}"
+                      p:suffix="${views.suffix}"
+                      p:cacheUnresolved="false"
+                      p:exposedContextBeanNames="webProperties"
+                      p:order="1"
+                />
+                <bean id="viewResolver"
+                      class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+                      p:viewClass="org.springframework.web.servlet.view.JstlView"
+                      p:prefix="${views.prefix}"
+                      p:suffix="${views.suffix}"
+                      p:cacheUnresolved="false"
+                      p:exposedContextBeanNames="webProperties"
+                      p:order="2"
+                />
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+            </list>
+        </property>
+    </bean>
+    -->
+
+
+
     <context:component-scan base-package="ru.javawebinar.**.web"/>
 
     <!--  all resources inside folder src/main/webapp/resources are mapped so they can be referred to inside JSP files -->

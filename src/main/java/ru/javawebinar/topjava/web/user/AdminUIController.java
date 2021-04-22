@@ -36,7 +36,7 @@ public class AdminUIController extends AbstractUserController {
         super.delete(id);
     }
 
-    @PostMapping
+    @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void createOrUpdate(@Valid @RequestBody UserTo userTo) {
         if (userTo.isNew()) {
